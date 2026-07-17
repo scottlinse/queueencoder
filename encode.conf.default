@@ -1,0 +1,41 @@
+#!/bin/bash
+# queueencoder configuration
+# This file is sourced by watch.sh BEFORE EVERY FILE, so edits here apply to
+# the next encode without restarting the container.
+
+# --- Encode quality -----------------------------------------------------
+# QSV ICQ quality (CRF-like). Lower = better quality / bigger files. 20-26 typical.
+GLOBAL_QUALITY=24
+
+# hevc_qsv preset: veryfast, faster, fast, medium, slow, slower, veryslow
+PRESET=veryslow
+
+# AAC audio bitrate
+AUDIO_BITRATE=160k
+
+# Resolution cap (never upscales, preserves aspect ratio)
+MAX_W=1920
+MAX_H=1080
+
+# --- Behavior toggles ---------------------------------------------------
+# Remux (stream-copy) sources that are already HEVC instead of re-encoding.
+REMUX_HEVC=true
+
+# Emit sidecar .srt caption files next to the output (Stash-compatible):
+# copies/converts sidecar srt/vtt/ass/ssa and extracts embedded text subs.
+HANDLE_CAPTIONS=true
+
+# Delete the source from /watch after a successful encode.
+# Set to false to move it to /copy instead (mount /copy if you use this).
+DELETE_ORIGINAL=true
+
+# Video file extensions to process (lowercase)
+VIDEO_EXTENSIONS=(mp4 mkv avi mov wmv flv webm ts m4v)
+
+# --- Advanced: full encoder-args override -------------------------------
+# If non-empty, this REPLACES the entire generated video/audio/container arg
+# list (everything between the input and the output path). You own it all:
+# mapping, filters, codecs, tags, movflags. Example (software x265 fallback):
+# FFMPEG_OVERRIDE_ARGS=(-map 0:v:0 -map 0:a? -c:v libx265 -crf 22 -preset slow \
+#   -tag:v hvc1 -pix_fmt yuv420p -c:a aac -b:a 160k -movflags +faststart)
+FFMPEG_OVERRIDE_ARGS=()

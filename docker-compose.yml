@@ -1,0 +1,21 @@
+services:
+  queueencoder:
+    image: ghcr.io/scottlinse/queueencoder:latest
+    container_name: queueencoder
+    environment:
+      TZ: America/Los_Angeles
+      PUID: "99"
+      PGID: "100"
+    volumes:
+      - /mnt/user/appdata/queueencoder:/config
+      - /mnt/user/stash/data/watch:/watch
+      - /mnt/user/stash/data/output:/output
+      # Only needed if DELETE_ORIGINAL=false in encode.conf:
+      # - /mnt/user/stash/data/copy:/copy
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+    group_add:
+      - "100" # render/users GID - bump if you get "permission denied" on the device
+    restart: unless-stopped
+    labels:
+      - "net.unraid.docker.icon=https://raw.githubusercontent.com/qubex22/unraid-templates/main/ffmpeg-nvidia/ffmpeg.png"
