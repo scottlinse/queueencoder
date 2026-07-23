@@ -149,7 +149,13 @@ unique_base() {
   rel_dir="${rel_dir#/}"
   if [ -n "$rel_dir" ]; then
     prefix="$(echo "$rel_dir" | tr '/' '_' | tr -cd 'A-Za-z0-9_.-')"
-    candidate="${prefix}__${orig_base}"
+    if [ "$prefix" = "$orig_base" ]; then
+      # Downloader named the file the same as its folder - prefixing would
+      # just duplicate it (foo/foo.mp4 -> foo__foo.mp4). Use it once.
+      candidate="$orig_base"
+    else
+      candidate="${prefix}__${orig_base}"
+    fi
   else
     candidate="$orig_base"
   fi
