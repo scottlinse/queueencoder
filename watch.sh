@@ -194,7 +194,7 @@ done < <(find "$WATCH" -type f -print0)
 
 # 2) Watch for new arrivals. Events queue while an encode runs.
 log "Watching $WATCH for new files"
-inotifywait -m -e close_write -e moved_to --format '%w%f' "$WATCH" |
+inotifywait -r -m -e close_write -e moved_to --format '%w%f' "$WATCH" |
   while read -r f; do
     process_video "$f"
   done
